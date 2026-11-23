@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIAWPAW — Sweet Drinks</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-cream: #FFF8EE;
+            --bg-header: #FFFDF9;
+            --brown-dark: #4A3222;
+            --brown-muted: #7D5D4F;
+            --pink-dusty: #D6A2A2;
+            --pink-hover: #C88E8E;
+            --border-soft: #EADBC8;
+            --sage-bg: #EBF1E4;
+            --sage-circle: #C2D1B2;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F3ECE1;
+            color: var(--brown-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--bg-cream);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(74, 50, 34, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* HEADER & SCALLOPED BORDER */
+        header {
+            background-color: var(--bg-header);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .scallop-top {
+            height: 12px;
+            width: 100%;
+            background-image: radial-gradient(circle at 12px 0, var(--bg-header) 12px, transparent 13px);
+            background-size: 24px 12px;
+            position: sticky;
+            top: 72px;
+            z-index: 49;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--brown-dark);
+            cursor: pointer;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .cart-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: var(--pink-dusty);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .cart-btn:hover {
+            background-color: var(--pink-hover);
+            transform: scale(1.05);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: var(--brown-dark);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-header);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brown-dark);
+        }
+
+        /* NAVIGATION DRAWER */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background-color: var(--bg-header);
+            z-index: 100;
+            padding: 16px 24px;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .nav-overlay.active {
+            display: flex;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item {
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .nav-link {
+            display: block;
+            padding: 18px 4px;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s, padding-left 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--pink-hover);
+            padding-left: 10px;
+        }
+
+        /* VIEWS */
+        .view-section {
+            display: none;
+            padding: 20px;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .view-section.active {
+            display: flex;
+        }
+
+        /* HOME VIEW */
+        .home-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px 10px 40px;
+        }
+
+        .mascot-circle {
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFFDF9 40%, #F7EBDD 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(74, 50, 34, 0.05);
+            overflow: hidden;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 14px;
+            color: var(--brown-dark);
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--brown-muted);
+            line-height: 1.5;
+            max-width: 290px;
+            margin-bottom: 32px;
+        }
+
+        .btn-primary {
+            background-color: var(--pink-dusty);
+            color: var(--brown-dark);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 14px 32px;
+            border-radius: 999px;
+            border: 1.5px solid var(--brown-dark);
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--pink-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--brown-dark);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 12px 24px;
+            border-radius: 999px;
+            border: 1.5px solid var(--brown-dark);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #F7EBDD;
+        }
+
+        /* MENU VIEW */
+        .menu-tagline {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: var(--brown-muted);
+            margin-bottom: 2px;
+        }
+
+        .menu-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .menu-desc {
+            font-size: 14px;
+            color: var(--brown-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+        }
+
+        .filter-pill {
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border-soft);
+            background-color: var(--bg-header);
+            color: var(--brown-dark);
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .filter-pill span {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .filter-pill.active {
+            background-color: var(--brown-dark);
+            color: var(--white);
+            border-color: var(--brown-dark);
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            padding-bottom: 40px;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-img-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 24px;
+            overflow: hidden;
+            background-color: #EFE5D8;
+            margin-bottom: 14px;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background-color: rgba(255, 253, 249, 0.92);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--brown-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .product-desc {
+            font-size: 13.5px;
+            color: var(--brown-muted);
+            line-height: 1.4;
+            margin-bottom: 14px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+
+        .btn-add {
+            background-color: var(--pink-dusty);
+            color: var(--brown-dark);
+            border: 1.5px solid var(--brown-dark);
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-add:hover {
+            background-color: var(--pink-hover);
+        }
+
+        /* FIND YOUR MATCH & QUIZ STYLES */
+        .quiz-meta {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: var(--brown-muted);
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .quiz-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.12;
+            margin-bottom: 14px;
+        }
+
+        .quiz-desc {
+            font-size: 15px;
+            color: var(--brown-muted);
+            line-height: 1.55;
+            margin-bottom: 24px;
+        }
+
+        .btn-pill-action {
+            background-color: var(--pink-dusty);
+            color: var(--brown-dark);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 14px 28px;
+            border-radius: 999px;
+            border: 1.5px solid var(--brown-dark);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 24px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .btn-pill-action:hover {
+            background-color: var(--pink-hover);
+            transform: translateY(-2px);
+        }
+
+        .personality-preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .personality-mini-card {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 14px;
+        }
+
+        .personality-mini-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .personality-mini-sub {
+            font-size: 12.5px;
+            color: var(--brown-muted);
+            line-height: 1.35;
+        }
+
+        .quiz-box {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 24px;
+        }
+
+        .quiz-progress {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--brown-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .quiz-question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .quiz-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option-btn {
+            background-color: var(--bg-cream);
+            border: 1.5px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 14px 16px;
+            text-align: left;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--brown-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option-btn:hover {
+            border-color: var(--brown-dark);
+            background-color: #F7EBDD;
+        }
+
+        .result-card {
+            background-color: var(--bg-header);
+            border: 1.5px solid var(--brown-dark);
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .pair-badge {
+            display: inline-block;
+            background-color: #F7EAE3;
+            border: 1px solid #E6D0C7;
+            color: var(--brown-dark);
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+        }
+
+        /* PAWMATE STYLES */
+        .pawmate-status-banner {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 22px;
+            padding: 18px;
+            margin-bottom: 22px;
+        }
+
+        .ranking-card {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 22px;
+            padding: 18px;
+            margin-bottom: 22px;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-soft);
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .score-pill {
+            background-color: #F7EBDD;
+            border: 1px solid var(--border-soft);
+            font-weight: 700;
+            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .candidate-card {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .drink-ig-group {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 22px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .ig-handle-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #FFF8EE;
+            border: 1.5px solid var(--brown-dark);
+            color: var(--brown-dark);
+            border-radius: 999px;
+            padding: 7px 13px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ig-handle-chip:hover,
+        .ig-handle-chip.selected {
+            background-color: var(--pink-dusty);
+        }
+
+        .ig-directory-box {
+            margin-top: 12px;
+            background-color: #F7EBDD;
+            border: 1px dashed var(--brown-muted);
+            border-radius: 16px;
+            padding: 14px;
+        }
+
+        /* TOAST NOTIFICATION BAWAH */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: #4A3222;
+            color: #FFF8EE;
+            padding: 14px 24px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(74, 50, 34, 0.25);
+            z-index: 9999;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+            width: max-content;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .toast-container.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-icon {
+            width: 22px;
+            height: 22px;
+            background-color: #FFF8EE;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4A3222;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* SHOPPING CART VIEW */
+        .cart-view-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-count {
+            font-size: 15px;
+            color: var(--brown-muted);
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .cart-items-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .cart-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .cart-item-img {
+            width: 75px;
+            height: 75px;
+            min-width: 75px;
+            border-radius: 16px;
+            object-fit: cover;
+            background-color: #EFE5D8;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .cart-item-type {
+            font-size: 13px;
+            color: var(--brown-muted);
+            margin-bottom: 8px;
+        }
+
+        .cart-item-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .cart-controls-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 999px;
+            padding: 4px 10px;
+            gap: 12px;
+        }
+
+        .qty-btn-num {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--brown-dark);
+        }
+
+        .trash-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--brown-muted);
+            transition: color 0.2s;
+        }
+
+        .trash-btn:hover {
+            color: #C85A5A;
+        }
+
+        .summary-card {
+            background-color: var(--bg-header);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border-soft);
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            color: var(--brown-muted);
+            margin-bottom: 12px;
+        }
+
+        .summary-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--brown-dark);
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border-soft);
+            margin-bottom: 20px;
+        }
+
+        .continue-shopping-link {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--brown-dark);
+            cursor: pointer;
+            text-decoration: underline;
+            display: block;
+            margin-top: 14px;
+        }
+
+        /* CHECKOUT VIEW */
+        .checkout-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--brown-dark);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            color: var(--brown-dark);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--pink-dusty);
+        }
+
+        .option-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .option-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .select-pill-btn {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--brown-dark);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .select-pill-btn.active {
+            border-color: var(--brown-dark);
+            background-color: #F7EBDD;
+        }
+
+        .qris-preview-box {
+            background-color: var(--bg-header);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .qris-image {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            border-radius: 14px;
+            border: 1px solid var(--border-soft);
+            display: block;
+            margin: 10px auto;
+        }
+
+        .pawmate-checkbox-card {
+            background-color: #F7EAE3;
+            border-radius: 20px;
+            padding: 18px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border: 1px solid #E6D0C7;
+        }
+
+        .pawmate-checkbox-card input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--brown-dark);
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .pawmate-checkbox-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .pawmate-checkbox-desc {
+            font-size: 13px;
+            color: var(--brown-muted);
+            line-height: 1.4;
+        }
+
+        /* RECEIPT / STRUK VIEW */
+        .receipt-card {
+            background-color: var(--bg-header);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border-soft);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(74,50,34,0.04);
+        }
+
+        .receipt-header-text {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border-soft);
+        }
+
+        .receipt-info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--brown-muted);
+        }
+
+        .receipt-info-row strong {
+            color: var(--brown-dark);
+            text-align: right;
+        }
+
+        .payment-box-instruction {
+            background-color: #F7EBDD;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            border: 1px dashed var(--brown-muted);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- HEADER -->
+    <header>
+        <div class="brand" onclick="navigateTo('home')">
+            <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+                <path d="M14 24L10 10L24 16C26.5 15.3 29.2 15 32 15C34.8 15 37.5 15.3 40 16L54 10L50 24C53.2 27.5 55 32 55 37C55 48.5 44.7 56 32 56C19.3 56 9 48.5 9 37C9 32 10.8 27.5 14 24Z" fill="#FFFDF9" stroke="#6E4E3D" stroke-width="3.5" stroke-linejoin="round"/>
+                <circle cx="23" cy="36" r="2.5" fill="#4A3222"/>
+                <circle cx="41" cy="36" r="2.5" fill="#4A3222"/>
+                <ellipse cx="18" cy="41" rx="3.5" ry="2" fill="#F2B8B8"/>
+                <ellipse cx="46" cy="41" rx="3.5" ry="2" fill="#F2B8B8"/>
+                <path d="M29 40C29 41.5 30.5 42.5 32 41C33.5 42.5 35 41.5 35 40" stroke="#4A3222" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <span class="brand-title">MIAWPAW</span>
+        </div>
+
+        <div class="header-actions">
+            <button class="cart-btn" onclick="navigateTo('cart')" aria-label="Cart">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <span class="cart-badge" id="cart-count">0</span>
+            </button>
+
+            <button class="menu-btn" onclick="toggleNav()" aria-label="Menu">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+    <div class="scallop-top"></div>
+
+    <!-- NAVIGATION DRAWER -->
+    <div class="nav-overlay" id="nav-drawer">
+        <div class="nav-header">
+            <div class="brand" onclick="navigateTo('home'); toggleNav();">
+                <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+                    <path d="M14 24L10 10L24 16C26.5 15.3 29.2 15 32 15C34.8 15 37.5 15.3 40 16L54 10L50 24C53.2 27.5 55 32 55 37C55 48.5 44.7 56 32 56C19.3 56 9 48.5 9 37C9 32 10.8 27.5 14 24Z" fill="#FFFDF9" stroke="#6E4E3D" stroke-width="3.5" stroke-linejoin="round"/>
+                    <circle cx="23" cy="36" r="2.5" fill="#4A3222"/>
+                    <circle cx="41" cy="36" r="2.5" fill="#4A3222"/>
+                    <ellipse cx="18" cy="41" rx="3.5" ry="2" fill="#F2B8B8"/>
+                    <ellipse cx="46" cy="41" rx="3.5" ry="2" fill="#F2B8B8"/>
+                    <path d="M29 40C29 41.5 30.5 42.5 32 41C33.5 42.5 35 41.5 35 40" stroke="#4A3222" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-title">MIAWPAW</span>
+            </div>
+
+            <div class="header-actions">
+                <button class="cart-btn" onclick="toggleNav(); navigateTo('cart');">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                </button>
+                <button class="menu-btn" onclick="toggleNav()" aria-label="Close Menu">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item"><a class="nav-link" onclick="navigateTo('home'); toggleNav();">Home</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigateTo('menu'); toggleNav();">Our Menu</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigateTo('match'); toggleNav();">Find Your Match</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigateTo('pawmate'); toggleNav();">Pawmate</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigateTo('about'); toggleNav();">About Miawpaw</a></li>
+        </ul>
+    </div>
+
+    <!-- 1. VIEW: HOME -->
+    <section id="view-home" class="view-section active">
+        <div class="home-hero">
+            <div class="mascot-circle">
+                <svg width="170" height="170" viewBox="0 0 200 200" fill="none">
+                    <path d="M62 145C42 145 35 125 45 110C52 100 62 115 65 130" fill="#FFFDF9" stroke="#C5A898" stroke-width="3" stroke-linecap="round"/>
+                    <ellipse cx="100" cy="128" rx="42" ry="45" fill="#FFFDF9" stroke="#C5A898" stroke-width="3"/>
+                    <path d="M68 65L60 40L85 52C90 50 95 49 100 49C105 49 110 50 115 52L140 40L132 65C138 71 142 79 142 88C142 105 123 115 100 115C77 115 58 105 58 88C58 79 62 71 68 65Z" fill="#FFFDF9" stroke="#C5A898" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M68 60L65 46L78 53" fill="#F2C6C6"/>
+                    <path d="M132 60L135 46L122 53" fill="#F2C6C6"/>
+                    <circle cx="84" cy="84" r="3.5" fill="#4A3222"/>
+                    <circle cx="116" cy="84" r="3.5" fill="#4A3222"/>
+                    <ellipse cx="75" cy="92" rx="6" ry="3.5" fill="#F6C2C2"/>
+                    <ellipse cx="125" cy="92" rx="6" ry="3.5" fill="#F6C2C2"/>
+                    <path d="M95 90C95 93 98 94 100 92C102 94 105 93 105 90" stroke="#4A3222" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M72 112C85 117 115 117 128 112" stroke="#D6A2A2" stroke-width="7" stroke-linecap="round"/>
+                    <path d="M82 114L66 105L68 124L82 114Z" fill="#D6A2A2" stroke="#A67676" stroke-width="2"/>
+                    <path d="M82 114L96 106L94 123L82 114Z" fill="#D6A2A2" stroke="#A67676" stroke-width="2"/>
+                    <circle cx="82" cy="114" r="4" fill="#C88E8E"/>
+                    <path d="M115 95H137L134 112C133 116 119 116 118 112L115 95Z" fill="#E8D8EE" stroke="#8E7696" stroke-width="2"/>
+                    <ellipse cx="102" cy="142" rx="24" ry="6" fill="#EFE5D8" stroke="#B59B8B" stroke-width="2"/>
+                    <path d="M88 140C88 128 116 128 116 140H88Z" fill="#FFFDF9" stroke="#C5A898" stroke-width="2.5"/>
+                    <ellipse cx="76" cy="164" rx="12" ry="9" fill="#FFFDF9" stroke="#C5A898" stroke-width="2.5"/>
+                    <ellipse cx="124" cy="164" rx="12" ry="9" fill="#FFFDF9" stroke="#C5A898" stroke-width="2.5"/>
+                </svg>
+            </div>
+
+            <h1 class="hero-title" id="home-status-title">Your cart is purr-<br>fectly empty</h1>
+            <p class="hero-subtitle">Pick a signature drink to brighten your day.</p>
+
+            <button class="btn-primary" style="width: 230px; margin: 0 auto;" onclick="navigateTo('menu')">Explore Our Menu</button>
+        </div>
+    </section>
+
+    <!-- 2. VIEW: OUR MENU -->
+    <section id="view-menu" class="view-section">
+        <p class="menu-tagline">fresh from the cat kitchen</p>
+        <h2 class="menu-heading">Our Menu</h2>
+        <p class="menu-desc">Pick your favorite sweet drink to brighten your day.</p>
+
+        <div class="filter-tabs" id="filter-tabs">
+            <button class="filter-pill active" onclick="filterMenu('all', this)">
+                Product <span id="count-all">4</span>
+            </button>
+        </div>
+
+        <div class="product-list" id="product-list"></div>
+    </section>
+
+    <!-- 3. VIEW: FIND YOUR MATCH (PERSONALITY QUIZ) -->
+    <section id="view-match" class="view-section">
+        <p class="quiz-meta">5 questions · about a minute</p>
+        <h2 class="quiz-heading">Find Your Cat Match!</h2>
+        <p class="quiz-desc">Every cat has its own personality. Which one matches yours? Take our little quiz and discover your Miawpaw personality &amp; Pawmate energy!</p>
+
+        <div id="quiz-intro-area">
+            <button class="btn-pill-action" onclick="startQuiz()">
+                Start the Quiz &rarr;
+            </button>
+
+            <div id="saved-personality-banner" style="display:none; margin-bottom: 18px;"></div>
+
+            <div class="personality-preview-grid">
+                <div class="personality-mini-card">
+                    <div class="personality-mini-title">🍵 Matcha</div>
+                    <div class="personality-mini-sub">The Calm Thinker · Tenang, thoughtful, observant</div>
+                </div>
+                <div class="personality-mini-card">
+                    <div class="personality-mini-title">🍠 Taro</div>
+                    <div class="personality-mini-sub">The Soft Soul · Warm, caring, easy-going</div>
+                </div>
+                <div class="personality-mini-card">
+                    <div class="personality-mini-title">🍓 Strawberry</div>
+                    <div class="personality-mini-sub">The Bright Spark · Ceria, spontan, energetic</div>
+                </div>
+                <div class="personality-mini-card">
+                    <div class="personality-mini-title">🍫 Chocolate</div>
+                    <div class="personality-mini-sub">The Bold Heart · Berani, confident, passionate</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-question-area" class="quiz-box" style="display:none;">
+            <div class="quiz-progress" id="quiz-progress-text">Question 1 of 5</div>
+            <div class="quiz-question-text" id="quiz-question-text"></div>
+            <div class="quiz-options-list" id="quiz-options-container"></div>
+        </div>
+
+        <div id="quiz-result-area" style="display:none;"></div>
+    </section>
+
+    <!-- 4. VIEW: PAWMATE -->
+    <section id="view-pawmate" class="view-section">
+        <p class="quiz-meta">same energy &amp; complementary energy</p>
+        <h2 class="quiz-heading">Find Your<br>Pawmate!</h2>
+        <p class="quiz-desc">Pembeli yang sudah memesan minuman dan mencantumkan Instagram akan terdata per jenis minuman. Tekan <strong>Let's Connect!</strong> untuk melihat dan memilih akun Instagram pembeli lain sesuai minuman yang dipesan.</p>
+
+        <div class="pawmate-status-banner" id="pawmate-user-personality-box"></div>
+
+        <div id="pawmate-ranking-container"></div>
+
+        <div id="pawmate-drink-groups-container"></div>
+
+        <div id="pawmate-candidates-container"></div>
+    </section>
+
+    <!-- 5. VIEW: ABOUT MIAWPAW -->
+    <section id="view-about" class="view-section">
+        <p class="menu-tagline">our little story</p>
+        <h2 class="menu-heading" style="margin-bottom: 16px;">About Miawpaw</h2>
+        <p class="about-story-text" style="color:var(--brown-muted); line-height:1.6; margin-bottom:28px;">Miawpaw is a cat-themed drink shop. We believe everyday sweet drinks should feel a little special — and that the best moments are shared.</p>
+    </section>
+
+    <!-- 6. VIEW: SHOPPING CART -->
+    <section id="view-cart" class="view-section">
+        <h2 class="cart-view-title">Shopping Cart</h2>
+        <div class="cart-item-count" id="cart-item-count-text">0 items</div>
+
+        <div class="cart-items-wrapper" id="cart-items-container"></div>
+
+        <div class="summary-card">
+            <h3 class="summary-title">Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="cart-subtotal-text">Rp 0</span>
+            </div>
+            <div class="summary-total-row">
+                <span>Total</span>
+                <span id="cart-total-text">Rp 0</span>
+            </div>
+            <button class="btn-primary" id="btn-go-checkout" onclick="goToCheckout()">Checkout &rarr;</button>
+        </div>
+
+        <span class="continue-shopping-link" onclick="navigateTo('menu')">Continue shopping</span>
+    </section>
+
+    <!-- 7. VIEW: CHECKOUT -->
+    <section id="view-checkout" class="view-section">
+        <h2 class="cart-view-title" style="margin-bottom: 24px;">Checkout</h2>
+
+        <div class="checkout-section-title" style="margin-top: 0;">Your details</div>
+        <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" id="checkout-name" placeholder="Enter your name...">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Phone / WhatsApp</label>
+            <input type="text" class="form-input" id="checkout-phone" placeholder="WhatsApp / +62...">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Instagram Handle <span style="font-weight:400; color:var(--brown-muted);">(untuk Pawmate sesuai minuman)</span></label>
+            <input type="text" class="form-input" id="checkout-instagram" placeholder="@username_kamu">
+        </div>
+
+        <div class="checkout-section-title">How would you like it?</div>
+        <div class="option-grid-2">
+            <button class="select-pill-btn active" id="btn-pickup" onclick="selectFulfillment('Pickup')">Pick up</button>
+            <button class="select-pill-btn" id="btn-delivery" onclick="selectFulfillment('Delivery')">Delivery</button>
+        </div>
+
+        <!-- DELIVERY LOCATION TEXT BOX -->
+        <div id="delivery-location-section" class="form-group" style="display:none;">
+            <label class="form-label" for="checkout-address">Lokasi / Alamat Pengiriman</label>
+            <textarea class="form-input" id="checkout-address" rows="3" placeholder="Tulis alamat lengkap, patokan, atau titik lokasi pengiriman..."></textarea>
+        </div>
+
+        <div class="checkout-section-title">Payment</div>
+        <div class="option-grid-3">
+            <button class="select-pill-btn active" id="pay-qris" onclick="selectPayment('QRIS')">QRIS</button>
+            <button class="select-pill-btn" id="pay-transfer" onclick="selectPayment('Bank transfer')">Bank transfer</button>
+            <button class="select-pill-btn" id="pay-cash" onclick="selectPayment('Cash')">Cash</button>
+        </div>
+
+        <!-- QRIS IMAGE BOX SAAT MEMILIH QRIS -->
+        <div id="checkout-qris-box" class="qris-preview-box">
+            <div style="font-weight: 700; font-size: 14px;">Scan QRIS Pembayaran</div>
+            <div style="font-size: 12.5px; color: var(--brown-muted); margin-top: 2px;">NADILA AGHNIA SHAFA, MAKANAN &amp; MINUMAN · NMID: ID1025422857330</div>
+            <img src="WhatsApp Image 2026-11-23 at 18.40.29.jpeg" alt="QRIS Nadila Aghnia Shafa" class="qris-image">
+            <div style="font-size: 12px; color: var(--brown-muted);">Total bayar: <strong id="checkout-qris-total">Rp 0</strong></div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+            <label class="form-label">Notes for us <span style="font-weight:400; color:var(--brown-muted);">(optional)</span></label>
+            <input type="text" class="form-input" id="checkout-notes" placeholder="Less sugar, extra love...">
+        </div>
+
+        <div class="pawmate-checkbox-card" onclick="togglePawmateCheck()">
+            <input type="checkbox" id="pawmate-checkbox" checked>
+            <div>
+                <div class="pawmate-checkbox-title">Join Random Pawmate with this order</div>
+                <div class="pawmate-checkbox-desc">Instagram Anda akan tersimpan ke database sesuai minuman yang dipesan dan bisa dipilih saat menekan Let's Connect!</div>
+            </div>
+        </div>
+
+        <div class="summary-card" style="margin-top: 10px;">
+            <h3 class="summary-title" style="font-size: 20px;">Your order</h3>
+            <div id="checkout-items-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;"></div>
+            <div style="border-top: 1px dashed var(--border-soft); margin-top: 12px; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700;">
+                <span>Total</span>
+                <span id="checkout-final-total">Rp 0</span>
+            </div>
+            <button class="btn-primary" id="btn-place-order" style="margin-top: 16px; background-color: #D6A2A2;" onclick="placeOrder()">Place Order</button>
+            <button class="btn-primary" style="margin-top: 10px; background-color: transparent; border: 1.5px solid var(--brown-dark); color: var(--brown-dark);" onclick="navigateTo('cart')">Back to cart</button>
+        </div>
+    </section>
+
+    <!-- 8. VIEW: ORDER RECEIPT / STRUK -->
+    <section id="view-receipt" class="view-section">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 40px; margin-bottom: 4px;">🐱🐾</div>
+            <h2 class="cart-view-title">Order Successful!</h2>
+            <p style="font-size: 14px; color: var(--brown-muted);">Terima kasih telah memesan di Miawpaw. Struk pesanan Anda:</p>
+        </div>
+
+        <div class="receipt-card">
+            <div class="receipt-header-text">
+                <div style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700;">MIAWPAW RECEIPT</div>
+                <div style="font-size: 13px; color: var(--brown-muted);" id="receipt-datetime">-</div>
+            </div>
+
+            <div class="receipt-info-row">
+                <span>Nama Pemesan:</span>
+                <strong id="receipt-name">-</strong>
+            </div>
+            <div class="receipt-info-row">
+                <span>No WhatsApp:</span>
+                <strong id="receipt-phone">-</strong>
+            </div>
+            <div class="receipt-info-row">
+                <span>Instagram:</span>
+                <strong id="receipt-instagram">-</strong>
+            </div>
+            <div class="receipt-info-row">
+                <span>Layanan:</span>
+                <strong id="receipt-fulfillment">-</strong>
+            </div>
+            <div class="receipt-info-row" id="receipt-address-row" style="display:none;">
+                <span>Lokasi Pengiriman:</span>
+                <strong id="receipt-address">-</strong>
+            </div>
+            <div class="receipt-info-row">
+                <span>Personality / Pawmate:</span>
+                <strong id="receipt-pawmate">-</strong>
+            </div>
+            <div class="receipt-info-row" style="margin-bottom: 16px;">
+                <span>Catatan:</span>
+                <strong id="receipt-notes" style="font-style: italic;">-</strong>
+            </div>
+
+            <div style="border-top: 1px dashed var(--border-soft); padding-top: 14px; margin-bottom: 14px;">
+                <div style="font-weight: 700; font-size: 15px; margin-bottom: 10px;">Detail Pesanan:</div>
+                <div id="receipt-items-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <div id="receipt-payment-section"></div>
+
+            <div style="border-top: 1px dashed var(--border-soft); margin-top: 14px; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700;">
+                <span>Total Harga</span>
+                <span id="receipt-total-price" style="color: #4A3222;">Rp 0</span>
+            </div>
+        </div>
+
+        <button class="btn-primary" style="margin-bottom: 10px;" onclick="navigateTo('pawmate')">Lihat Pawmate &amp; Instagram Sesuai Minuman &rarr;</button>
+        <button class="btn-secondary" style="width:100%;" onclick="navigateTo('home')">Back to Home</button>
+    </section>
+
+</div>
+
+<!-- TOAST NOTIFICATION BAWAH -->
+<div class="toast-container" id="toast-notification">
+    <div class="toast-icon">✓</div>
+    <span id="toast-message">Item added to your cart</span>
+</div>
+
+<script>
+    const API_BASE_URL = "api.php";
+    const QRIS_IMAGE_SRC = "WhatsApp Image 2026-11-23 at 18.40.29.jpeg";
+
+    async function apiGet(action) {
+        const res = await fetch(`${API_BASE_URL}?action=${encodeURIComponent(action)}`, { cache: "no-store" });
+        const text = await res.text();
+        let json;
+        try {
+            json = JSON.parse(text);
+        } catch (e) {
+            throw new Error(`Respon bukan JSON (${res.status}): ${text.slice(0, 140)}`);
+        }
+        if (!res.ok || !json.ok) {
+            throw new Error(json.error || `HTTP ${res.status}`);
+        }
+        return json;
+    }
+
+    async function apiPost(action, payload) {
+        const res = await fetch(`${API_BASE_URL}?action=${encodeURIComponent(action)}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        const text = await res.text();
+        let json;
+        try {
+            json = JSON.parse(text);
+        } catch (e) {
+            throw new Error(`Respon bukan JSON (${res.status}): ${text.slice(0, 140)}`);
+        }
+        if (!res.ok || !json.ok) {
+            throw new Error(json.error || `HTTP ${res.status}`);
+        }
+        return json;
+    }
+
+    const products = [
+        { id: 1, name: "Matcha Meow", drinkKey: "Matcha Meow", category: "drink", categoryLabel: "Drink", dotColor: "#8DB580", price: 22000, desc: "Iced matcha layered over cold milk. Calm in a cup.", image: "WhatsApp Image 2026-11-16 at 20.45.50.jpeg" },
+        { id: 2, name: "Taro Daydream", drinkKey: "Taro Daydream", category: "drink", categoryLabel: "Drink", dotColor: "#B79CED", price: 22000, desc: "Creamy taro milk in a soft lavender swirl.", image: "WhatsApp Image 2026-11-16 at 20.45..jpeg" },
+        { id: 3, name: "Strawberry", drinkKey: "Strawberry", category: "drink", categoryLabel: "Drink", dotColor: "#E89B5A", price: 18000, desc: "Iced strawberry with a bright, sunny sweetness.", image: "WhatsApp Image 2026-11-16 at 20.45.jpeg" },
+        { id: 4, name: "Choco Kitty Drink", drinkKey: "Choco Kitty Drink", category: "drink", categoryLabel: "Drink", dotColor: "#8C5830", price: 21000, desc: "Rich iced chocolate milk with a smooth cocoa blend.", image: "WhatsApp Image 2026-11-16 at 20.45.5.jpeg" }
+    ];
+
+    const personalities = {
+        matcha: { key: "matcha", emoji: "🍵", name: "Matcha", title: "Matcha – The Calm Thinker", traits: "Tenang, thoughtful, observant", recommendedDrink: "Matcha Meow" },
+        taro: { key: "taro", emoji: "🍠", name: "Taro", title: "Taro – The Soft Soul", traits: "Warm, caring, easy-going", recommendedDrink: "Taro Daydream" },
+        strawberry: { key: "strawberry", emoji: "🍓", name: "Strawberry", title: "Strawberry – The Bright Spark", traits: "Ceria, spontan, energetic", recommendedDrink: "Peachy Purr" },
+        chocolate: { key: "chocolate", emoji: "🍫", name: "Chocolate", title: "Chocolate – The Bold Heart", traits: "Berani, confident, passionate", recommendedDrink: "Choco Kitty Drink" }
+    };
+
+    const compatibilityMatrix = {
+        matcha: [
+            { target: "taro", rank: 1, medal: "🥇", score: 95, tag: "You calm each other.", reason: "Matcha yang thoughtful + Taro yang warm." },
+            { target: "matcha", rank: 2, medal: "🥈", score: 85, tag: "Same wavelength.", reason: "Sama-sama tenang dan thoughtful." },
+            { target: "chocolate", rank: 3, medal: "🥉", score: 70, tag: "Grounded ambition.", reason: "Ketenangan Matcha mengimbangi dorongan berani Chocolate." },
+            { target: "strawberry", rank: 4, medal: "", score: 60, tag: "Gentle contrast.", reason: "Beda ritme energi, memberi perspektif baru yang ringan." }
+        ],
+        taro: [
+            { target: "matcha", rank: 1, medal: "🥇", score: 95, tag: "You calm each other.", reason: "Taro yang warm + Matcha yang thoughtful." },
+            { target: "taro", rank: 2, medal: "🥈", score: 85, tag: "Comfort zone buddies.", reason: "Sama-sama warm dan easy-going." },
+            { target: "strawberry", rank: 3, medal: "🥉", score: 75, tag: "Sweet & sunny.", reason: "Kehangatan Taro menyatu dengan keceriaan Strawberry." },
+            { target: "chocolate", rank: 4, medal: "", score: 65, tag: "Soft heart, bold spirit.", reason: "Taro memberi rasa nyaman pada energi Chocolate yang kuat." }
+        ],
+        strawberry: [
+            { target: "chocolate", rank: 1, medal: "🥇", score: 95, tag: "You bring out each other’s spark.", reason: "Strawberry yang playful + Chocolate yang bold." },
+            { target: "strawberry", rank: 2, medal: "🥈", score: 85, tag: "Double the fun.", reason: "Sama-sama playful dan energetic." },
+            { target: "taro", rank: 3, medal: "🥉", score: 75, tag: "Sweet & sunny.", reason: "Keceriaan Strawberry terasa hangat bersama Taro yang easy-going." },
+            { target: "matcha", rank: 4, medal: "", score: 60, tag: "Gentle contrast.", reason: "Memberi jeda tenang di tengah spontanitas Strawberry." }
+        ],
+        chocolate: [
+            { target: "strawberry", rank: 1, medal: "🥇", score: 95, tag: "You bring out each other’s spark.", reason: "Chocolate yang bold + Strawberry yang playful." },
+            { target: "chocolate", rank: 2, medal: "🥈", score: 85, tag: "Power duo.", reason: "Sama-sama confident dan passionate." },
+            { target: "matcha", rank: 3, medal: "🥉", score: 70, tag: "Grounded ambition.", reason: "Observasi Matcha membantu mempertajam arah langkah Chocolate." },
+            { target: "taro", rank: 4, medal: "", score: 65, tag: "Soft heart, bold spirit.", reason: "Kehangatan Taro menyeimbangkan intensitas Chocolate." }
+        ]
+    };
+
+    const quizQuestions = [
+        {
+            q: "1. Saat datang ke tempat ngopi/nongkrong, vibe seperti apa yang paling kamu cari?",
+            options: [
+                { text: "Sudut tenang buat mikir santai dan mengamati sekitar", p: "matcha" },
+                { text: "Suasana hangat dan ramah yang bikin langsung merasa nyaman", p: "taro" },
+                { text: "Tempat seru yang penuh warna dan bikin mood langsung naik", p: "strawberry" },
+                { text: "Tempat berkarakter kuat yang cocok buat obrolan penuh semangat", p: "chocolate" }
+            ]
+        },
+        {
+            q: "2. Kalau ada rencana mendadak bareng teman, reaksi pertamamu biasanya gimana?",
+            options: [
+                { text: "Pikirin dulu detail waktu dan suasananya sebelum iyain", p: "matcha" },
+                { text: "Ikut aja selama suasananya akrab dan bikin semua nyaman", p: "taro" },
+                { text: "Langsung gas! Ide spontan selalu terdengar seru", p: "strawberry" },
+                { text: "Ayo tentuin arah dan targetnya biar jalannya mantap", p: "chocolate" }
+            ]
+        },
+        {
+            q: "3. Peran apa yang paling sering kamu ambil di dalam lingkaran pertemanan?",
+            options: [
+                { text: "Pendengar yang jeli dan ngasih insight terukur", p: "matcha" },
+                { text: "Penengah yang hangat dan bikin semua orang merasa diterima", p: "taro" },
+                { text: "Pemecah suasana yang bawa tawa dan kejutan", p: "strawberry" },
+                { text: "Penggerak yang berani ambil keputusan dan memotivasi", p: "chocolate" }
+            ]
+        },
+        {
+            q: "4. Gaya komunikasi kamu sehari-hari paling mirip yang mana?",
+            options: [
+                { text: "Kalem, terstruktur, dan nggak terburu-buru", p: "matcha" },
+                { text: "Lembut, suportif, dan mudah nyambung ke siapa aja", p: "taro" },
+                { text: "Ekspresif, playful, dan penuh antusiasme", p: "strawberry" },
+                { text: "Tegas, percaya diri, dan penuh passion", p: "chocolate" }
+            ]
+        },
+        {
+            q: "5. Kombinasi pasangan ngobrol seperti apa yang paling klik buatmu?",
+            options: [
+                { text: "Saling menenangkan dan saling melengkapi cara pandang", p: "matcha" },
+                { text: "Hangat, santai, dan minim drama", p: "taro" },
+                { text: "Saling memancing ide seru dan tawa bareng", p: "strawberry" },
+                { text: "Saling menyalakan semangat dan punya energi kuat", p: "chocolate" }
+            ]
+        }
+    ];
+
+    function normalizeIgHandle(raw) {
+        const cleaned = (raw || '').trim().replace(/^@+/, '').replace(/\s+/g, '');
+        return cleaned ? '@' + cleaned : '';
+    }
+
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, m => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[m]));
+    }
+
+    function getOrCreateSessionId() {
+        let sid = sessionStorage.getItem('miawpaw_session_id');
+        if (!sid) {
+            sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+            sessionStorage.setItem('miawpaw_session_id', sid);
+        }
+        return sid;
+    }
+
+    const sessionId = getOrCreateSessionId();
+    const cartStorageKey = `miawpaw_cart_${sessionId}`;
+    const personalityStorageKey = `miawpaw_personality_${sessionId}`;
+
+    function loadCartForSession() {
+        try {
+            const raw = sessionStorage.getItem(cartStorageKey);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveCartForSession() {
+        sessionStorage.setItem(cartStorageKey, JSON.stringify(cart));
+    }
+
+    function loadPersonalityForSession() {
+        const saved = sessionStorage.getItem(personalityStorageKey);
+        return personalities[saved] ? saved : null;
+    }
+
+    function savePersonalityForSession(key) {
+        if (personalities[key]) {
+            sessionStorage.setItem(personalityStorageKey, key);
+        }
+    }
+
+    let cart = loadCartForSession();
+    let userPersonalityKey = loadPersonalityForSession();
+    let pawmatePool = [];
+    let isSubmittingOrder = false;
+    let currentFilter = 'all';
+    let selectedFulfillment = 'Pickup';
+    let selectedPayment = 'QRIS';
+    let lastOrderData = null;
+
+    let quizIndex = 0;
+    let quizScores = { matcha: 0, taro: 0, strawberry: 0, chocolate: 0 };
+    let pawmateConnectedCards = {};
+    let selectedInstagramByKey = {};
+
+    function formatRupiah(num) {
+        return 'Rp ' + Number(num || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    async function syncPawmateFromDatabase(showNotify = false) {
+        try {
+            const pmRes = await apiGet("pawmate_list");
+            pawmatePool = pmRes.data || [];
+            renderPawmateView();
+            if (showNotify) showToast("Data Pawmate diperbarui");
+        } catch (err) {
+            renderPawmateView();
+        }
+    }
+
+    function navigateTo(viewName) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById('view-' + viewName);
+        if (target) {
+            target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (viewName === 'menu') {
+            renderProducts(currentFilter);
+        } else if (viewName === 'match') {
+            renderMatchIntroState();
+        } else if (viewName === 'pawmate') {
+            renderPawmateView();
+            syncPawmateFromDatabase(false);
+        } else if (viewName === 'cart') {
+            renderCartUI();
+        } else if (viewName === 'checkout') {
+            renderCheckoutUI();
+        } else if (viewName === 'receipt') {
+            renderReceiptUI();
+        }
+    }
+
+    function toggleNav() {
+        const drawer = document.getElementById('nav-drawer');
+        drawer.classList.toggle('active');
+    }
+
+    function filterMenu(category, btnElement) {
+        currentFilter = category;
+        if (btnElement) {
+            document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+        renderProducts(category);
+    }
+
+    function renderProducts(filter) {
+        const container = document.getElementById('product-list');
+        const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+
+        document.getElementById('count-all').textContent = products.length;
+
+        container.innerHTML = filtered.map(item => `
+            <div class="product-card">
+                <div class="product-img-wrapper">
+                    <span class="category-badge">
+                        <span class="dot" style="background-color: ${item.dotColor};"></span>
+                        ${item.categoryLabel}
+                    </span>
+                    <img src="${item.image}" alt="${item.name}" class="product-img" loading="lazy">
+                </div>
+                <h3 class="product-title">${item.name}</h3>
+                <p class="product-desc">${item.desc}</p>
+                <div class="product-footer">
+                    <span class="product-price">${formatRupiah(item.price)}</span>
+                    <button class="btn-add" onclick="addToCart(${item.id})">
+                        <span>+</span> Add
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderMatchIntroState() {
+        const banner = document.getElementById('saved-personality-banner');
+        if (userPersonalityKey && personalities[userPersonalityKey]) {
+            const p = personalities[userPersonalityKey];
+            const topRank = compatibilityMatrix[userPersonalityKey][0];
+            const topPartner = personalities[topRank.target];
+            banner.style.display = 'block';
+            banner.innerHTML = `
+                <div class="result-card" style="margin-bottom:0;">
+                    <div class="pair-badge">Hasil Quiz Aktif</div>
+                    <div style="font-family:'Playfair Display',serif; font-size:21px; font-weight:700; margin-bottom:4px;">${p.title}</div>
+                    <div style="font-size:13.5px; color:var(--brown-muted); margin-bottom:10px;">${p.traits} · Match terkuat: <strong>${topPartner.emoji} ${topPartner.name} (${topRank.score}%)</strong></div>
+                    <button class="btn-primary" onclick="navigateTo('pawmate')">Lihat Pawmate Match Saya &rarr;</button>
+                </div>
+            `;
+        } else {
+            banner.style.display = 'none';
+        }
+    }
+
+    function startQuiz() {
+        quizIndex = 0;
+        quizScores = { matcha: 0, taro: 0, strawberry: 0, chocolate: 0 };
+        document.getElementById('quiz-intro-area').style.display = 'none';
+        document.getElementById('quiz-result-area').style.display = 'none';
+        document.getElementById('quiz-question-area').style.display = 'block';
+        renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+        const qItem = quizQuestions[quizIndex];
+        document.getElementById('quiz-progress-text').textContent = `Question ${quizIndex + 1} of ${quizQuestions.length}`;
+        document.getElementById('quiz-question-text').textContent = qItem.q;
+
+        const optionsContainer = document.getElementById('quiz-options-container');
+        optionsContainer.innerHTML = qItem.options.map((opt) => `
+            <button class="quiz-option-btn" onclick="selectQuizAnswer('${opt.p}')">
+                ${opt.text}
+            </button>
+        `).join('');
+    }
+
+    function selectQuizAnswer(personalityKey) {
+        quizScores[personalityKey] = (quizScores[personalityKey] || 0) + 1;
+        quizIndex += 1;
+
+        if (quizIndex < quizQuestions.length) {
+            renderQuizQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        const orderPriority = ['matcha', 'taro', 'strawberry', 'chocolate'];
+        let winnerKey = orderPriority[0];
+        let maxScore = -1;
+
+        for (const key of orderPriority) {
+            if (quizScores[key] > maxScore) {
+                maxScore = quizScores[key];
+                winnerKey = key;
+            }
+        }
+
+        userPersonalityKey = winnerKey;
+        savePersonalityForSession(winnerKey);
+
+        document.getElementById('quiz-question-area').style.display = 'none';
+        const resArea = document.getElementById('quiz-result-area');
+        resArea.style.display = 'block';
+
+        const p = personalities[winnerKey];
+        const rankings = compatibilityMatrix[winnerKey];
+        const top1 = rankings[0];
+        const partner1 = personalities[top1.target];
+
+        resArea.innerHTML = `
+            <div class="result-card">
+                <div class="pair-badge">Your Miawpaw Personality</div>
+                <h3 style="font-family:'Playfair Display',serif; font-size:26px; font-weight:700; margin-bottom:6px;">${p.title}</h3>
+                <p style="font-size:14px; color:var(--brown-muted); margin-bottom:14px;">Karakter utama: <strong>${p.traits}</strong> · Rekomendasi drink: <strong>${p.recommendedDrink}</strong></p>
+
+                <div style="background-color:#F7EBDD; border-radius:16px; padding:14px; margin-bottom:16px; border:1px solid var(--border-soft);">
+                    <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--brown-muted); margin-bottom:4px;">Pasangan Utama Pawmate</div>
+                    <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700;">${p.emoji} ${p.name} &times; ${partner1.emoji} ${partner1.name} — ${top1.score}%</div>
+                    <div style="font-size:13.5px; font-weight:600; margin-top:2px;">“${top1.tag}”</div>
+                    <div style="font-size:13px; color:var(--brown-muted); margin-top:2px;">${top1.reason}</div>
+                </div>
+
+                <button class="btn-primary" style="margin-bottom:10px;" onclick="navigateTo('pawmate')">Buka Pawmate &amp; Ranking Kecocokan &rarr;</button>
+                <button class="btn-secondary" style="width:100%;" onclick="startQuiz()">Ulangi Quiz</button>
+            </div>
+        `;
+    }
+
+    function getCompatibilityEntry(sourceKey, targetKey) {
+        const list = compatibilityMatrix[sourceKey] || [];
+        return list.find(entry => entry.target === targetKey) || { score: 60, tag: "Pawmate match", reason: "Kecocokan energi." };
+    }
+
+    function selectInstagramHandle(contextKey, igHandle) {
+        selectedInstagramByKey[contextKey] = igHandle;
+        renderPawmateView();
+    }
+
+    function triggerConnectForContext(contextKey, drinkName) {
+        const matchingList = pawmatePool.filter(entry => entry.drinkName === drinkName && entry.instagram);
+        pawmateConnectedCards[contextKey] = true;
+        if (matchingList.length > 0 && !selectedInstagramByKey[contextKey]) {
+            selectedInstagramByKey[contextKey] = matchingList[0].instagram;
+        }
+        renderPawmateView();
+        showToast(`Instagram pembeli ${drinkName} terbuka`);
+    }
+
+    function renderInstagramSelectorBlock(contextKey, drinkName) {
+        const buyersForDrink = pawmatePool.filter(entry => entry.drinkName === drinkName && entry.instagram);
+        const isConnected = !!pawmateConnectedCards[contextKey];
+
+        if (!isConnected) {
+            return `
+                <button class="btn-primary" style="padding:10px 14px; font-size:13px; margin-top:12px;" onclick="triggerConnectForContext('${contextKey}', '${escapeHtml(drinkName)}')">
+                    Let's Connect! (${buyersForDrink.length} IG pembeli ${escapeHtml(drinkName)})
+                </button>
+            `;
+        }
+
+        if (buyersForDrink.length === 0) {
+            return `
+                <div class="ig-directory-box">
+                    <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Belum ada pembeli ${escapeHtml(drinkName)} yang mencantumkan Instagram</div>
+                    <div style="font-size:12.5px; color:var(--brown-muted);">Pesan ${escapeHtml(drinkName)} dan isi Instagram di Checkout agar masuk ke database.</div>
+                </div>
+            `;
+        }
+
+        const chosenIg = selectedInstagramByKey[contextKey] || buyersForDrink[0].instagram;
+        const cleanUsername = chosenIg.replace(/^@+/, '');
+
+        return `
+            <div class="ig-directory-box">
+                <div style="font-size:12.5px; font-weight:700; margin-bottom:8px;">
+                    Pilih Instagram pembeli pesanan <strong>${escapeHtml(drinkName)}</strong>:
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                    ${buyersForDrink.map(b => {
+                        const activeCls = b.instagram === chosenIg ? 'selected' : '';
+                        return `
+                            <button type="button" class="ig-handle-chip ${activeCls}" onclick="selectInstagramHandle('${contextKey}', '${escapeHtml(b.instagram)}')">
+                                <span>@</span> ${escapeHtml(b.instagram.replace(/^@+/, ''))}
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+                <div style="font-size:13px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding-top:8px; border-top:1px dashed var(--border-soft);">
+                    <div>
+                        Terpilih: <strong>${escapeHtml(chosenIg)}</strong> · Pesanan: <strong>${escapeHtml(drinkName)}</strong>
+                    </div>
+                    <a href="https://instagram.com/${encodeURIComponent(cleanUsername)}" target="_blank" rel="noopener noreferrer" style="font-size:12.5px; font-weight:700; color:var(--brown-dark); text-decoration:underline;">
+                        Buka Profil IG &rarr;
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderPawmateView() {
+        const statusBox = document.getElementById('pawmate-user-personality-box');
+        const rankingContainer = document.getElementById('pawmate-ranking-container');
+        const drinkGroupsContainer = document.getElementById('pawmate-drink-groups-container');
+        const candidatesContainer = document.getElementById('pawmate-candidates-container');
+
+        const activeKey = (userPersonalityKey && personalities[userPersonalityKey]) ? userPersonalityKey : 'matcha';
+        const currentP = personalities[activeKey];
+        const ranks = compatibilityMatrix[activeKey];
+
+        if (!userPersonalityKey || !personalities[userPersonalityKey]) {
+            statusBox.innerHTML = `
+                <div style="font-weight:700; font-size:16px; margin-bottom:6px;">Belum ada hasil quiz personality</div>
+                <p style="font-size:13.5px; color:var(--brown-muted); margin-bottom:12px;">Anda bisa mengikuti quiz di <strong>Find Your Match</strong> atau langsung memilih akun Instagram pembeli berdasarkan jenis minuman di bawah.</p>
+                <button class="btn-secondary" style="padding:9px 16px; font-size:13px;" onclick="navigateTo('match')">Ambil Quiz Find Your Match &rarr;</button>
+            `;
+        } else {
+            statusBox.innerHTML = `
+                <div class="pair-badge">Personality Terdeteksi</div>
+                <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:4px;">${currentP.title}</div>
+                <div style="font-size:13.5px; color:var(--brown-muted); margin-bottom:12px;">${currentP.traits}</div>
+                <button class="btn-secondary" style="padding:8px 16px; font-size:12.5px;" onclick="navigateTo('match')">Ganti / Ulangi Quiz</button>
+            `;
+        }
+
+        rankingContainer.innerHTML = `
+            <div class="ranking-card">
+                <h3 style="font-family:'Playfair Display',serif; font-size:21px; font-weight:700; margin-bottom:4px;">Urutan Kecocokan (${currentP.name})</h3>
+                <p style="font-size:13px; color:var(--brown-muted); margin-bottom:12px;">Kombinasi complementary energy &amp; same energy:</p>
+                ${ranks.map(item => {
+                    const targetP = personalities[item.target];
+                    return `
+                        <div class="ranking-item">
+                            <div>
+                                <div style="font-weight:700; font-size:15px;">
+                                    ${item.rank}. ${item.medal ? item.medal + ' ' : ''}${targetP.emoji} ${targetP.name} <span style="font-weight:500; font-size:12.5px; color:var(--brown-muted);">(${targetP.title.split('–')[1].trim()})</span>
+                                </div>
+                                <div style="font-size:13px; font-weight:600; margin-top:2px;">“${item.tag}”</div>
+                                <div style="font-size:12.5px; color:var(--brown-muted);">${item.reason}</div>
+                            </div>
+                            <span class="score-pill">${item.score}%</span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        drinkGroupsContainer.innerHTML = `
+            <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px;">Instagram per Jenis Pesanan Minuman</h3>
+            <p style="font-size:13.5px; color:var(--brown-muted); margin-bottom:14px;">Setiap pembeli yang menekan Let's Connect! dan mencantumkan Instagram akan tersimpan ke database sesuai jenis minuman yang dipesan.</p>
+            ${products.map(prod => {
+                const buyers = pawmatePool.filter(p => p.drinkName === prod.name && p.instagram);
+                const groupKey = 'group_' + prod.id;
+                return `
+                    <div class="drink-ig-group">
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                            <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700;">${escapeHtml(prod.name)}</div>
+                            <span class="score-pill">${buyers.length} IG</span>
+                        </div>
+                        <div style="font-size:12.5px; color:var(--brown-muted); margin-top:4px;">
+                            ${buyers.length > 0 ? buyers.map(b => `${escapeHtml(b.instagram)} (${escapeHtml(personalities[b.personality]?.name || 'Pawmate')})`).join(' · ') : 'Belum ada IG tercatat pada minuman ini.'}
+                        </div>
+                        ${renderInstagramSelectorBlock(groupKey, prod.name)}
+                    </div>
+                `;
+            }).join('')}
+        `;
+
+        const sortedCandidates = [...pawmatePool]
+            .map((c, idx) => {
+                const compat = getCompatibilityEntry(activeKey, c.personality);
+                return { ...c, compat, idx };
+            })
+            .sort((a, b) => b.compat.score - a.compat.score);
+
+        candidatesContainer.innerHTML = `
+            <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px;">Kandidat Pawmate</h3>
+            <p style="font-size:13.5px; color:var(--brown-muted); margin-bottom:14px;">Tekan Let's Connect! untuk memilih akun Instagram pembeli yang memesan minuman yang sama dengan kandidat ini.</p>
+            ${sortedCandidates.length === 0 ? `<p style="font-size:13.5px; color:var(--brown-muted);">Belum ada data Pawmate di database. Lakukan checkout dan centang Join Pawmate untuk menambah data.</p>` : ''}
+            ${sortedCandidates.map(cand => {
+                const candP = personalities[cand.personality] || personalities.matcha;
+                const candKey = 'cand_' + cand.idx + '_' + cand.id;
+                return `
+                    <div class="candidate-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                            <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700;">@${escapeHtml(cand.nickname)}</div>
+                            <span class="score-pill">${cand.compat.score}% Match</span>
+                        </div>
+                        <div style="font-size:13px; font-weight:600; color:var(--brown-dark); margin-top:4px;">
+                            ${candP.emoji} ${candP.title} · Pesanan: <strong>${escapeHtml(cand.drinkName)}</strong>
+                        </div>
+                        <div style="font-size:12.5px; color:var(--brown-muted); margin-top:2px;">
+                            <em>“${cand.compat.tag}”</em> — ${escapeHtml(cand.note || '')}
+                        </div>
+                        ${renderInstagramSelectorBlock(candKey, cand.drinkName)}
+                    </div>
+                `;
+            }).join('')}
+        `;
+    }
+
+    let toastTimer;
+    function showToast(message) {
+        const toast = document.getElementById('toast-notification');
+        document.getElementById('toast-message').textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2500);
+    }
+
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        const existing = cart.find(c => c.id === productId);
+        if (existing) { existing.qty += 1; } else { cart.push({ ...product, qty: 1 }); }
+        saveCartForSession();
+        updateBadge();
+        showToast(`${product.name} added to your cart`);
+    }
+
+    function changeQty(productId, delta) {
+        const item = cart.find(c => c.id === productId);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) { cart = cart.filter(c => c.id !== productId); }
+        saveCartForSession();
+        renderCartUI();
+        updateBadge();
+    }
+
+    function removeItem(productId) {
+        cart = cart.filter(c => c.id !== productId);
+        saveCartForSession();
+        renderCartUI();
+        updateBadge();
+    }
+
+    function updateBadge() {
+        const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById('cart-count').textContent = totalQty;
+        const homeTitle = document.getElementById('home-status-title');
+        if (totalQty > 0) {
+            homeTitle.innerHTML = `You have ${totalQty} drink${totalQty > 1 ? 's' : ''}<br>in your basket!`;
+        } else {
+            homeTitle.innerHTML = `Your cart is purr-<br>fectly empty`;
+        }
+    }
+
+    function renderCartUI() {
+        updateBadge();
+        const container = document.getElementById('cart-items-container');
+        const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+        document.getElementById('cart-item-count-text').textContent = `${totalItems} item${totalItems !== 1 ? 's' : ''}`;
+        document.getElementById('cart-subtotal-text').textContent = formatRupiah(totalPrice);
+        document.getElementById('cart-total-text').textContent = formatRupiah(totalPrice);
+
+        const checkoutBtn = document.getElementById('btn-go-checkout');
+        checkoutBtn.disabled = cart.length === 0;
+        checkoutBtn.style.opacity = cart.length === 0 ? '0.5' : '1';
+        checkoutBtn.style.cursor = cart.length === 0 ? 'not-allowed' : 'pointer';
+
+        if (cart.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color: var(--brown-muted); padding: 30px 0;">Keranjang belanja masih kosong.</p>`;
+            return;
+        }
+
+        container.innerHTML = cart.map(item => `
+            <div class="cart-row">
+                <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                <div class="cart-item-details">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-type">${item.categoryLabel}</div>
+                    <div class="cart-item-price">${formatRupiah(item.price)}</div>
+                </div>
+                <div class="cart-controls-area">
+                    <button class="trash-btn" onclick="removeItem(${item.id})">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                    <div class="qty-box">
+                        <button class="qty-btn-num" onclick="changeQty(${item.id}, -1)">-</button>
+                        <span style="font-weight: 600; font-size: 14px; min-width: 12px; text-align: center;">${item.qty}</span>
+                        <button class="qty-btn-num" onclick="changeQty(${item.id}, 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function goToCheckout() {
+        if (cart.length === 0) {
+            alert('Keranjang Anda masih kosong.');
+            return;
+        }
+        navigateTo('checkout');
+    }
+
+    function selectFulfillment(type) {
+        selectedFulfillment = type;
+        document.getElementById('btn-pickup').classList.toggle('active', type === 'Pickup');
+        document.getElementById('btn-delivery').classList.toggle('active', type === 'Delivery');
+        const deliverySection = document.getElementById('delivery-location-section');
+        if (deliverySection) {
+            deliverySection.style.display = type === 'Delivery' ? 'block' : 'none';
+        }
+    }
+
+    function updateCheckoutQrisBox() {
+        const qrisBox = document.getElementById('checkout-qris-box');
+        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        if (qrisBox) {
+            qrisBox.style.display = selectedPayment === 'QRIS' ? 'block' : 'none';
+        }
+        const qrisTotalEl = document.getElementById('checkout-qris-total');
+        if (qrisTotalEl) {
+            qrisTotalEl.textContent = formatRupiah(totalPrice);
+        }
+    }
+
+    function selectPayment(type) {
+        selectedPayment = type;
+        document.getElementById('pay-qris').classList.toggle('active', type === 'QRIS');
+        document.getElementById('pay-transfer').classList.toggle('active', type === 'Bank transfer');
+        document.getElementById('pay-cash').classList.toggle('active', type === 'Cash');
+        updateCheckoutQrisBox();
+    }
+
+    function togglePawmateCheck() {
+        const cb = document.getElementById('pawmate-checkbox');
+        cb.checked = !cb.checked;
+    }
+
+    function renderCheckoutUI() {
+        const container = document.getElementById('checkout-items-list');
+        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+        container.innerHTML = cart.map(item => `
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 14px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <img src="${item.image}" style="width: 45px; height: 45px; border-radius: 10px; object-fit: cover;">
+                    <div>
+                        <div style="font-weight: 700;">${item.name} &times; ${item.qty}</div>
+                        <div style="font-size: 12px; color: var(--brown-muted);">${item.categoryLabel}</div>
+                    </div>
+                </div>
+                <div style="font-weight: 600;">${formatRupiah(item.price * item.qty)}</div>
+            </div>
+        `).join('');
+
+        document.getElementById('checkout-final-total').textContent = formatRupiah(totalPrice);
+        selectFulfillment(selectedFulfillment);
+        updateCheckoutQrisBox();
+    }
+
+    async function placeOrder() {
+        if (isSubmittingOrder) return;
+        if (cart.length === 0) {
+            alert('Keranjang Anda kosong.');
+            navigateTo('menu');
+            return;
+        }
+
+        const name = document.getElementById('checkout-name').value.trim();
+        const phone = document.getElementById('checkout-phone').value.trim();
+        const rawIg = document.getElementById('checkout-instagram').value.trim();
+        const igHandle = normalizeIgHandle(rawIg);
+        const deliveryAddress = (document.getElementById('checkout-address')?.value || '').trim();
+
+        if (!name) {
+            alert('Mohon masukkan nama Anda terlebih dahulu.');
+            document.getElementById('checkout-name').focus();
+            return;
+        }
+
+        if (selectedFulfillment === 'Delivery' && !deliveryAddress) {
+            alert('Mohon masukkan lokasi / alamat pengiriman terlebih dahulu.');
+            document.getElementById('checkout-address').focus();
+            return;
+        }
+
+        const joinPawmate = document.getElementById('pawmate-checkbox').checked;
+        if (joinPawmate && !igHandle) {
+            alert('Mohon masukkan akun Instagram Anda (contoh: @namaakun) untuk bergabung di Pawmate.');
+            document.getElementById('checkout-instagram').focus();
+            return;
+        }
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        const pKey = (userPersonalityKey && personalities[userPersonalityKey]) ? userPersonalityKey : 'matcha';
+        const pInfo = personalities[pKey].name;
+        const pawmateText = joinPawmate ? `${pInfo} · Join Pawmate (${igHandle})` : `${pInfo} · Tidak join`;
+
+        const purchasedItems = [...cart];
+        const totalAmount = purchasedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const userNotes = document.getElementById('checkout-notes').value.trim();
+        const finalAddress = selectedFulfillment === 'Delivery' ? deliveryAddress : '-';
+        const notesVal = selectedFulfillment === 'Delivery'
+            ? `[Lokasi: ${finalAddress}]${userNotes ? ' ' + userNotes : ''}`
+            : (userNotes || 'Tidak ada catatan');
+
+        const cleanNick = igHandle ? igHandle.replace(/^@+/, '') : '';
+        const newPawmateEntries = (joinPawmate && igHandle)
+            ? purchasedItems.map((item) => ({
+                nickname: cleanNick,
+                instagram: igHandle,
+                drink_name: item.name,
+                personality: pKey,
+                note: `Memesan ${item.name} (x${item.qty}) oleh ${name}.`
+            }))
+            : [];
+
+        const submitBtn = document.getElementById('btn-place-order');
+        isSubmittingOrder = true;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Memproses pesanan...";
+        }
+
+        try {
+            await apiPost("checkout", {
+                order: {
+                    customer_name: name,
+                    phone: phone || '-',
+                    instagram: igHandle || '-',
+                    fulfillment: selectedFulfillment,
+                    payment: selectedPayment,
+                    delivery_address: finalAddress,
+                    notes: notesVal,
+                    items: purchasedItems.map(it => ({ name: it.name, qty: it.qty, price: it.price })),
+                    total_price: totalAmount,
+                    join_pawmate: joinPawmate
+                },
+                pawmate_entries: newPawmateEntries
+            });
+            showToast("Pesanan tersimpan ke database!");
+        } catch (err) {
+            alert("Gagal menyimpan ke database:\n" + err.message);
+            isSubmittingOrder = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Place Order";
+            }
+            return;
+        }
+
+        isSubmittingOrder = false;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Place Order";
+        }
+
+        lastOrderData = {
+            name,
+            phone: phone || '-',
+            instagram: igHandle || '-',
+            fulfillment: selectedFulfillment,
+            address: finalAddress,
+            payment: selectedPayment,
+            notes: userNotes || 'Tidak ada catatan',
+            pawmate: pawmateText,
+            dateTime: `${dateStr} - ${timeStr}`,
+            items: purchasedItems,
+            total: totalAmount
+        };
+
+        cart = [];
+        saveCartForSession();
+        document.getElementById('checkout-name').value = '';
+        document.getElementById('checkout-phone').value = '';
+        document.getElementById('checkout-instagram').value = '';
+        if (document.getElementById('checkout-address')) {
+            document.getElementById('checkout-address').value = '';
+        }
+        document.getElementById('checkout-notes').value = '';
+        selectFulfillment('Pickup');
+        updateBadge();
+        await syncPawmateFromDatabase(false);
+        navigateTo('receipt');
+    }
+
+    function renderReceiptUI() {
+        if (!lastOrderData) return;
+
+        document.getElementById('receipt-datetime').textContent = lastOrderData.dateTime;
+        document.getElementById('receipt-name').textContent = lastOrderData.name;
+        document.getElementById('receipt-phone').textContent = lastOrderData.phone;
+        document.getElementById('receipt-instagram').textContent = lastOrderData.instagram;
+        document.getElementById('receipt-fulfillment').textContent = lastOrderData.fulfillment;
+
+        const addressRow = document.getElementById('receipt-address-row');
+        if (lastOrderData.fulfillment === 'Delivery' && lastOrderData.address && lastOrderData.address !== '-') {
+            addressRow.style.display = 'flex';
+            document.getElementById('receipt-address').textContent = lastOrderData.address;
+        } else {
+            addressRow.style.display = 'none';
+        }
+
+        document.getElementById('receipt-pawmate').textContent = lastOrderData.pawmate;
+        document.getElementById('receipt-notes').textContent = lastOrderData.notes;
+        document.getElementById('receipt-total-price').textContent = formatRupiah(lastOrderData.total);
+
+        const itemsContainer = document.getElementById('receipt-items-list');
+        itemsContainer.innerHTML = lastOrderData.items.map(item => `
+            <div style="display: flex; justify-content: space-between; font-size: 13.5px;">
+                <span>${item.name} &times; ${item.qty}</span>
+                <span style="font-weight: 600;">${formatRupiah(item.price * item.qty)}</span>
+            </div>
+        `).join('');
+
+        const paymentSection = document.getElementById('receipt-payment-section');
+        if (lastOrderData.payment === 'QRIS') {
+            paymentSection.innerHTML = `
+                <div class="payment-box-instruction">
+                    <div style="font-weight: 700; margin-bottom: 6px; font-size: 14px;">Scan QRIS untuk Pembayaran</div>
+                    <div style="font-size: 12.5px; color: var(--brown-muted); margin-bottom: 6px;">NADILA AGHNIA SHAFA, MAKANAN &amp; MINUMAN · NMID: ID1025422857330</div>
+                    <img src="${QRIS_IMAGE_SRC}" alt="QRIS Nadila Aghnia Shafa" class="qris-image">
+                    <div style="font-size: 12px; color: var(--brown-muted); margin-top: 6px;">Silakan scan kode QRIS di atas sesuai nominal total pesanan.</div>
+                </div>
+            `;
+        } else if (lastOrderData.payment === 'Bank transfer') {
+            paymentSection.innerHTML = `
+                <div class="payment-box-instruction">
+                    <div style="font-weight: 700; margin-bottom: 6px; font-size: 14px;">Transfer Bank Mandiri</div>
+                    <div style="font-size: 13px; color: var(--brown-muted); margin-bottom: 4px;">Silakan transfer ke nomor rekening berikut:</div>
+                    <div style="font-family: monospace; font-size: 18px; font-weight: 700; color: var(--brown-dark); letter-spacing: 1px;">1670007123788</div>
+                    <div style="font-size: 12px; color: var(--brown-muted); margin-top: 4px;">a.n. PT Miawpaw Sweet Drinks</div>
+                </div>
+            `;
+        } else {
+            paymentSection.innerHTML = `
+                <div class="payment-box-instruction">
+                    <div style="font-weight: 700; margin-bottom: 4px; font-size: 14px;">Pembayaran Tunai (Cash)</div>
+                    <div style="font-size: 13px; color: var(--brown-muted);">Silakan lakukan pembayaran langsung di kasir saat pesanan Anda disiapkan atau diambil.</div>
+                </div>
+            `;
+        }
+    }
+
+    renderProducts('all');
+    renderCartUI();
+    renderMatchIntroState();
+    syncPawmateFromDatabase(false);
+</script>
+</body>
+</html>
